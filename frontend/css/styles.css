@@ -1,0 +1,399 @@
+/* General Styles */
+:root {
+    --background-color: #fff8e1;
+    --text-color: #212121;
+    --primary-color: #00bfa6;
+    --secondary-color: #3f51b5;
+    --accent-color: #ff4081;
+    --card-bg-color: #9ae0e4; /* Light blue for cards */
+    --nav-bg-color: #2c3e50;
+    --nav-text-color: #ffffff;
+    --footer-bg-color: #2c3e50;
+    --footer-text-color: #ffffff;
+}
+
+/* Dark Mode Colors */
+body.dark-mode {
+    --background-color: #0f172a; /* Dark blue for background */
+    --text-color: #f5f5f5;
+    --primary-color: #00e0b1;
+    --secondary-color: #536dfe;
+    --accent-color: #ff4081;
+    --card-bg-color: #1e293b; /* Slightly lighter dark blue for cards */
+    --nav-bg-color: #374151;
+    --nav-text-color: #ffffff;
+    --footer-bg-color: #374151;
+    --footer-text-color: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--nav-bg-color);
+    color: var(--nav-text-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+nav .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+nav .nav-links {
+    list-style: none;
+    display: flex;
+}
+
+nav .nav-links li {
+    margin-left: 5rem;
+}
+
+nav .nav-links a {
+    color: var(--nav-text-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.2s;
+}
+
+nav .nav-links a:hover {
+    color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+nav #theme-toggle {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+nav #theme-toggle:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+body.dark-mode .hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+}
+
+.hero .cta-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.hero .cta-button {
+    padding: 0.8rem 2rem;
+    background-color: var(--secondary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.hero .cta-button:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Map Section */
+.map-container {
+    padding: 2rem;
+    background-color: var(--background-color);
+}
+
+.map-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.map-filters select, .map-filters input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#map {
+    height: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Safety Tips */
+.safety-tips {
+    padding: 2rem;
+    background-color: var(--card-bg-color);
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.safety-tips h2 {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.tips-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-content: center;
+}
+
+.tip {
+    padding: 1rem;
+    background-color: var(--background-color);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.tip span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.tip:nth-child(3) {
+    grid-column: span 2;
+    justify-self: center;
+}
+
+.tip:hover {
+    transform: scale(1.05);
+}
+
+body.dark-mode .tip {
+    background: #2e466c; /* Slightly lighter dark blue for tiles */
+}
+
+/* Statistics */
+.statistics {
+    padding: 2rem;
+    background-color: var(--card-bg-color);
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.statistics h2 {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.statistics p {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.charts {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.charts canvas {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    height: 300px;
+}
+/* Contact Us Section */
+.contact-us {
+    background: var(--card-bg-color);
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-form label {
+    font-size: 1rem;
+    text-align: left;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.contact-form button {
+    background-color: #ff6b6b;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+    background-color: #ff4c4c;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text-color);
+    margin-top: 2rem;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body.dark-mode nav {
+    background-color: var(--nav-bg-color);
+}
+
+body.dark-mode .hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+body.dark-mode .map-container,
+body.dark-mode .safety-tips,
+body.dark-mode .statistics,
+body.dark-mode .contact-us {
+    background-color: var(--card-bg-color);
+}
+
+body.dark-mode .tip {
+    background-color: #2e466c;
+}
+
+body.dark-mode footer {
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text-color);
+}
+
+
+/* send sms */
+.sms-form {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sms-form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sms-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.sms-form input,
+.sms-form textarea,
+.sms-form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.sms-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.sms-form button:hover {
+    background-color: #0056b3;
+}
+
+#responseMessage {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}

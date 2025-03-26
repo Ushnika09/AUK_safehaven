@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Incident - SafeHaven</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/report.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">SafeHaven</div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="#" id="logout-btn">Logout</a></li>
+            <li><button id="theme-toggle">🌙</button></li>
+        </ul>
+    </nav>
+
+    <!-- Report Form -->
+    <section class="report-form">
+        <h2>Report an Incident</h2>
+        <form id="reportForm" action="/submit-report" method="POST" enctype="multipart/form-data">
+            <!-- Incident Title -->
+            <label for="incident_title">Incident Title</label>
+            <input type="text" id="incident_title" name="incident_title" placeholder="Enter a title for the incident" required>
+
+            <!-- Date & Time -->
+            <label for="date_time">Date & Time</label>
+            <input type="datetime-local" id="date_time" name="date_time" required>
+
+            <!-- Map Section -->
+            <div id="map" style="height: 300px; margin-bottom: 20px;"></div>
+
+            <!-- Latitude and Longitude -->
+            <label for="latitude">Latitude</label>
+            <input type="text" id="latitude" name="latitude" placeholder="Enter latitude manually or click on the map" required>
+
+            <label for="longitude">Longitude</label>
+            <input type="text" id="longitude" name="longitude" placeholder="Enter longitude manually or click on the map" required>
+
+            <!-- Location Buttons -->
+            <div class="button-group">
+                <button type="button" id="getLocationBtn">Get Live Location</button>
+                <button type="button" id="setManualLocationBtn">Set Location Manually</button>
+            </div>
+
+            <!-- Crime Type -->
+            <label for="crime_type">Type of Crime</label>
+            <select id="crime_type" name="crime_type" required>
+                <optgroup label="Harassment & Threats">
+                    <option value="eve_teasing">Eve-Teasing (Verbal Harassment)</option>
+                    <option value="catcalling">Catcalling</option>
+                    <option value="stalking">Stalking</option>
+                    <option value="threats">Threats & Intimidation</option>
+                    <option value="molestation">Unwanted Touching (Molestation)</option>
+                </optgroup>
+                <optgroup label="Robbery & Theft">
+                    <option value="snatching">Snatching (Phone, Bag, Jewelry)</option>
+                    <option value="pickpocketing">Pickpocketing</option>
+                    <option value="forced_robbery">Forced Robbery</option>
+                </optgroup>
+                <optgroup label="Public Transport Safety">
+                    <option value="public_transport_harassment">Harassment in Public Transport</option>
+                    <option value="suspicious_taxi">Suspicious Taxi/Auto Behavior</option>
+                    <option value="overcrowding">Overcrowding & Unsafe Situations</option>
+                </optgroup>
+                <optgroup label="Environmental & Infrastructure Concerns">
+                    <option value="dark_street">Poor Street Lighting</option>
+                    <option value="no_cctv">Lack of CCTV Coverage</option>
+                    <option value="isolated_area">Isolated Areas</option>
+                    <option value="suspicious_activity">Suspicious Activities/Individuals</option>
+                </optgroup>
+            </select>
+
+            <!-- Description -->
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Describe the incident" required></textarea>
+
+            <!-- Severity -->
+            <label for="severity">Severity</label>
+            <select id="severity" name="severity" required>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+            <!-- Number of People Involved -->
+            <label for="people_involved">Number of People Involved</label>
+            <input type="number" id="people_involved" name="people_involved" min="1" required>
+
+            <!-- Injured -->
+            <label>Was anyone injured?</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" id="injuredYes" name="injured" value="yes" required> Yes
+                </label>
+                <label>
+                    <input type="radio" id="injuredNo" name="injured" value="no" required> No
+                </label>
+            </div>
+
+            <!-- Was it reported to authorities? -->
+            <label>Was it reported to authorities?</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" id="reportedYes" name="reported" value="yes" required> Yes
+                </label>
+                <label>
+                    <input type="radio" id="reportedNo" name="reported" value="no" required> No
+                </label>
+            </div>
+
+            <!-- Report Anonymously? -->
+            <label>Report Anonymously?</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" id="anonymousYes" name="anonymous" value="yes" required> Yes
+                </label>
+                <label>
+                    <input type="radio" id="anonymousNo" name="anonymous" value="no" required> No
+                </label>
+            </div>
+
+            <!-- Media Upload -->
+            <label for="media">Upload Photo/Video (Optional):</label>
+            <input type="file" id="media" name="media" accept="image/*,video/*">
+
+            <!-- Submit Button -->
+            <button type="submit">Submit Report</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 SafeHaven. All rights reserved.</p>
+    </footer>
+
+    <!-- Leaflet.js for Maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/report.js"></script>
+    <script>
+
+document.getElementById('logout-btn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default link behavior
+
+    // Show logging out message
+    const logoutMessage = document.createElement('div');
+    logoutMessage.innerText = "Logging out...";
+    logoutMessage.style.position = "fixed";
+    logoutMessage.style.top = "50%";
+    logoutMessage.style.left = "50%";
+    logoutMessage.style.transform = "translate(-50%, -50%)";
+    logoutMessage.style.background = "rgba(0, 0, 0, 0.8)";
+    logoutMessage.style.color = "white";
+    logoutMessage.style.padding = "20px";
+    logoutMessage.style.fontSize = "1.5rem";
+    logoutMessage.style.borderRadius = "8px";
+    document.body.appendChild(logoutMessage);
+
+    // Clear session/local storage
+    sessionStorage.removeItem("authToken"); 
+    localStorage.removeItem("authToken");
+
+    // Delay for effect, then redirect
+    setTimeout(() => {
+        window.location.href = "index.html";
+    }, 2000); // 2 seconds delay
+});
+    </script>
+</body>
+</html>

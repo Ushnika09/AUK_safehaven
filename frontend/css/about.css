@@ -1,0 +1,408 @@
+/* General Styles */
+:root {
+    --background-color: #f5eef2; /* Soft pink background */
+    --text-color: #212121;
+    --primary-color: #ff85a2; /* Warm pink */
+    --secondary-color: #ff4081; /* Vibrant pink */
+    --accent-color: #ffb3c6; /* Light pastel pink */
+    --card-bg-color: #f8bbd0; /* Soft pink for cards */
+    --nav-bg-color: #2C3E50; /* Deep blue-gray for nav */
+    --nav-text-color: #ffffff;
+    --footer-bg-color: #ff85a2; /* Footer matches the theme */
+    --footer-text-color: #ffffff;
+    --tile-bg-color: #f8f1f1; /* White for a cleaner look */
+    --tile-border-color: #4A90E2; /* Gentle blue for tile borders */
+    --shade-blue: #4A90E2; /* Gentle blue accent */
+    --shade-light-blue: #B3E5FC; /* Soft light blue */
+}
+
+/* Dark Mode Colors */
+body.dark-mode {
+    --background-color: #2c2c2c;
+    --text-color: #f5f5f5;
+    --primary-color: #ff69b4;
+    --secondary-color: #ff1493;
+    --accent-color: #ffb6c1;
+    --card-bg-color: #3c3c3c;
+    --nav-bg-color: #ff69b4;
+    --nav-text-color: #ffffff;
+    --footer-bg-color: #ff69b4;
+    --footer-text-color: #ffffff;
+    --tile-bg-color: #3c3c3c;
+    --tile-border-color: #ff1493;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--nav-bg-color);
+    color: var(--nav-text-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+nav .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--nav-text-color);
+}
+
+nav .nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+nav .nav-links a {
+    color: var(--nav-text-color);
+    font-weight: 600;
+    transition: color 0.3s, transform 0.2s;
+}
+
+nav .nav-links a:hover {
+    color: var(--shade-light-blue);
+    transform: scale(1.05);
+}
+
+nav #theme-toggle {
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+nav #theme-toggle:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--shade-blue));
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+.hero .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.hero .cta-button {
+    padding: 0.8rem 2rem;
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.hero .cta-button:hover {
+    background-color: var(--shade-blue);
+    transform: scale(1.1);
+}
+
+/* Sections */
+.intro, .features, .safety-tips, .team, .contact-us {
+    padding: 2rem;
+    background-color: var(--shade-light-blue);
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    transition: background 0.3s, color 0.3s;
+    border: 2px solid var(--tile-border-color);
+}
+
+/* Why Choose Us */
+/* Features Section */
+.features {
+    background: var(--card-bg-color);
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.feature-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.feature {
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.feature:hover {
+    transform: scale(1.05);
+}
+
+body.dark-mode .feature {
+    background: #2e466c; /* Slightly lighter dark blue for tiles */
+}
+
+.features .feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.features .feature p {
+    font-size: 1rem;
+}
+
+/* Safety Tips */
+.safety-tips {
+    background: var(--card-bg-color);
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    .tips-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        justify-content: center;
+        max-width: 800px;
+        margin: auto;
+    }
+    
+    .tip {
+        background-color: #ffffff;
+        border: 2px solid #0066cc;
+        border-radius: 10px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #003366;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        text-align: left;
+    }
+    
+    /* Centered single tip */
+    .tip:nth-child(3) {
+        grid-column: span 2;
+        text-align: center;
+    }
+    
+    .tip:hover {
+        transform: scale(1.05);
+    }
+    
+    .tip span {
+        font-size: 1.5rem;
+    }
+    
+/* Meet the Team */
+.team {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f0f8ff;
+}
+
+/* Team Members Container */
+.team-members {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 30px;
+    padding: 20px;
+    overflow-x: auto; /* Enables horizontal scrolling if needed */
+    white-space: nowrap; /* Prevents members from stacking */
+}
+
+/* Individual Team Member */
+.member {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 250px; /* Ensures equal width */
+    flex: 0 0 auto; /* Prevents shrinking */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.member:hover {
+    transform: scale(1.08);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Picture */
+.member img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #0066cc;
+    margin-bottom: 15px;
+}
+
+/* Member Name */
+.member h3 {
+    font-size: 1.5rem;
+    color: #003366;
+    margin: 10px 0 5px;
+}
+
+/* Member Role */
+.member p {
+    font-size: 1rem;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Hide Scrollbar (Optional) */
+.team-members::-webkit-scrollbar {
+    height: 8px;
+}
+
+.team-members::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 4px;
+}
+
+.team-members::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* Contact Us Section */
+.contact-us {
+    background: var(--tile-bg-color);
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    transition: background 0.3s, color 0.3s;
+    border: 2px solid var(--tile-border-color);
+}
+
+.contact-us h2 {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-form label {
+    font-size: 1rem;
+    text-align: left;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.contact-form button {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+    background-color: var(--accent-color);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text-color);
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body.dark-mode nav {
+    background-color: var(--nav-bg-color);
+}
+
+body.dark-mode .hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+body.dark-mode .map-container,
+body.dark-mode .safety-tips,
+body.dark-mode .statistics,
+body.dark-mode .contact-us {
+    background-color: var(--card-bg-color);
+}
+
+body.dark-mode .tip {
+    background-color: #3c3c3c;
+}
+
+body.dark-mode footer {
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text-color);
+}

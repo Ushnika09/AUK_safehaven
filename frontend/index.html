@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeHaven - Women's Safety Platform</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.77/build/spline-viewer.js"></script>
+</head>
+
+<body>
+    <!-- Add new background elements -->
+    <div class="morphing-background"></div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Safe<span>Haven</span></h1>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <!-- <i class="fas fa-times" id="close-menu"></i> -->
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="nav-buttons">
+                <!-- Register Link -->
+                <a href="./register.html" class="login-btn" style="margin-right: 10px;">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Register</span>
+                </a>
+            
+                <!-- Login Link -->
+                <a href="./login.html" class="login-btn">
+                    <i class="fas fa-user"></i>
+                    <span>Login</span>
+                </a>
+            
+                <i class="fas fa-bars" id="menu-icon"></i>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Empowering Women Through Safety</h1>
+            <p>Your safety is our priority. Join our community and access tools designed to keep you secure.</p>
+            <div class="cta-buttons">
+                <button class="btn primary-btn">Get Started</button>
+                <button class="btn secondary-btn">Learn More</button>
+            </div>
+        </div>
+        <div class="hero-image-container">
+            <img src="./assets/img1.png" height="400px" alt="SafeHaven Hero Image" class="hero-image-animation">
+            <div class="aurora-borealis"></div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="section-title">
+            <h2>Our Features</h2>
+            <p>Tools designed to keep you safe in any situation</p>
+        </div>
+        <div class="feature-cards">
+            <div class="feature-card neumorphic">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Location Tracking</h3>
+                <p>Share your location with trusted contacts in real-time for added security.</p>
+            </div>
+            <div class="feature-card neumorphic">
+                <i class="fas fa-bell"></i>
+                <h3>Emergency Alerts</h3>
+                <p>Quickly send alerts to emergency contacts with just one tap.</p>
+            </div>
+            <div class="feature-card neumorphic">
+                <i class="fas fa-route"></i>
+                <h3>Safe Route Planner</h3>
+                <p>Find the safest routes to your destination based on community data.</p>
+            </div>
+            <div class="feature-card neumorphic">
+                <i class="fas fa-users"></i>
+                <h3>Community Support</h3>
+                <p>Connect with a community of women sharing safety tips and experiences.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="safety-tips" class="safety-tips">
+        <div class="section-title">
+            <h2>Safety Tips</h2>
+            <p>Expert advice to help you stay safe</p>
+        </div>
+        <div class="tips-carousel">
+            <div class="tip-slide active">
+                <h3>Traveling Alone</h3>
+                <p>Always share your itinerary with a trusted friend or family member. Use our SafeCheck feature to send
+                    automatic updates.</p>
+            </div>
+            <div class="tip-slide">
+                <h3>Night Safety</h3>
+                <p>Stay in well-lit areas and consider using our virtual companion feature for added security when
+                    walking at night.</p>
+            </div>
+            <div class="tip-slide">
+                <h3>Public Transport</h3>
+                <p>Sit near the driver or conductor and always keep your personal belongings secure and within sight.
+                </p>
+            </div>
+            <div class="carousel-controls">
+                <button id="prev-tip"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-indicators">
+                    <span class="indicator active"></span>
+                    <span class="indicator"></span>
+                    <span class="indicator"></span>
+                </div>
+                <button id="next-tip"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="resources" class="resources">
+        <div class="section-title">
+            <h2>Emergency Contacts</h2>
+            <p>24/7 Support Available</p>
+        </div>
+        <div class="emergency-contacts">
+            <ul class="contact-list">
+                <li>
+                    <strong>Police Emergency:</strong>
+                    <span class="phone">911</span>
+                </li>
+                <li>
+                    <strong>Women's Helpline:</strong>
+                    <span class="phone">1-800-799-7233</span>
+                </li>
+                <li>
+                    <strong>SafeHaven Support:</strong>
+                    <span class="phone">1-888-SAFEHAVEN</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+
+
+    <section id="trusted-by" class="media-coverage">
+        <div class="section-title">
+            <h2>Trusted By Communities</h2>
+            <p>Partnering with organizations to create safer spaces for women</p>
+        </div>
+        <div class="media-logos">
+            <div class="logo-row">
+                <div class="trust-badge">
+                    <i class="fas fa-university"></i>
+                    <span>Universities</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-building"></i>
+                    <span>Corporations</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-hospital"></i>
+                    <span>Hospitals</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Institutions</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-city"></i>
+                    <span>Communities</span>
+                </div>
+            </div>
+            <div class="logo-row">
+                <div class="trust-badge">
+                    <i class="fas fa-subway"></i>
+                    <span>Transit</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-store"></i>
+                    <span>Retailers</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-hotel"></i>
+                    <span>Hotels</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-school"></i>
+                    <span>Schools</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-shopping-mall"></i>
+                    <span>Malls</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="section-title">
+            <h2>What Our Users Say</h2>
+            <p>Real stories from women in our community</p>
+        </div>
+        <div class="testimonial-container">
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="user-avatar">
+                       
+                    </div>
+                    <div class="user-details">
+                        <h4>Sarah M.</h4>
+                        <p>Student, 22</p>
+                    </div>
+                </div>
+                <p class="testimonial-text">"The SafeHer app has been a game-changer for me. I feel much more confident walking back from late classes knowing my friends can track my location."</p>
+             
+            </div>
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        
+                    </div>
+                    <div class="user-details">
+                        <h4>Elena R.</h4>
+                        <p>Professional, 35</p>
+                    </div>
+                </div>
+                <p class="testimonial-text">"The emergency alert feature saved me from a potentially dangerous situation. With just one tap, my emergency contacts were notified with my exact location."</p>
+              
+            </div>
+        </div>
+    </section>
+
+ 
+
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <div class="contact-image">
+                <img src="./assets/img2.png" alt="Contact Image">
+            </div>
+            <div class="contact-form">
+                <h2>Get in touch</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name <span>*</span></label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email ID <span>*</span></label>
+                        <input type="email" id="email" placeholder="Enter your email ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Talk to us</label>
+                        <textarea id="message" placeholder="Enter your message" required></textarea>
+                    </div>
+                    <div class="form-group recaptcha">
+                        <input type="checkbox" id="recaptcha" required>
+                        <label for="recaptcha">I'm not a robot</label>
+                    </div>
+                    <button type="submit">Let's Talk</button>
+                </form>
+                <div id="formStatus" class="form-status"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2>SafeHaven</h2>
+                <p>Empowering women through safety innovation</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-column">
+                    <h3>Navigation</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#resources">Resources</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Data Protection</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="newsletter">
+                <h3>Stay Updated</h3>
+                <p>Subscribe to our newsletter for safety tips and updates</p>
+                <form id="newsletterForm">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SafeHaven. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // Initialize theme on page load
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - SafeHaven</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+    <style>
+        /* Style for the phone input container */
+.phone-input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Style for the country code dropdown */
+.country-code {
+    width: 120px; /* Adjust width as needed */
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Style for the phone number input */
+#phone {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Style for the input group */
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.input-group i {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #555;
+}
+    </style>
+</head>
+<body>
+    <!-- Simplified navigation -->
+    <nav>
+        <div class="logo">SafeHaven</div>
+        <ul class="nav-links">
+            <li><a href="login.html">Login</a></li>
+            <li><button id="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
+        </ul>
+    </nav>
+
+    <!-- Register Form -->
+    <section class="auth-form">
+        <h2><i class="fas fa-user-plus"></i> Register</h2>
+        <form id="registerForm">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <div class="phone-input-container">
+                    <select id="countryCode" class="country-code">
+                        <option value="+91">+91 (India)</option>
+                        <option value="+1">+1 (USA)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+61">+61 (Australia)</option>
+                        <option value="+49">+49 (Germany)</option>
+                        <option value="+33">+33 (France)</option>
+                        <option value="+81">+81 (Japan)</option>
+                        <option value="+86">+86 (China)</option>
+                        <option value="+7">+7 (Russia)</option>
+                        <option value="+971">+971 (UAE)</option>
+                        <option value="+966">+966 (Saudi Arabia)</option>
+                        <option value="+65">+65 (Singapore)</option>
+                    </select>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Enter your password (min 6 characters)" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+
+            <!-- OTP Verification Section -->
+            <div id="otpSection" style="display: none;">
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
+                </div>
+                <button type="button" id="verifyOTP" class="btn-verify">
+                    <i class="fas fa-check-circle"></i> Verify OTP
+                </button>
+            </div>
+
+            <button type="button" id="sendOTP" class="btn-send">
+                <i class="fas fa-paper-plane"></i> Send OTP
+            </button>
+            <button type="submit" id="submitBtn" style="display: none;" class="btn-register">
+                <i class="fas fa-user-plus"></i> Register
+            </button>
+        </form>
+        <p style="color:black;">Already have an account? <a href="login.html">Login here</a></p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 SafeHaven. All rights reserved.</p>
+    </footer>
+
+    <script src="js/register.js"></script>
+</body>
+</html>

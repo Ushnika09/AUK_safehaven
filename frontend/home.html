@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeHaven - Your Safety Matters</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">SafeHaven</div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+            <li><a href="report.html">Report</a></li>
+            <li><a href="#" id="logout-btn">Logout</a></li>
+            <li><button id="theme-toggle">🌙</button></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Empowering Communities, Ensuring Safety</h1>
+        <p>Report and view unsafe locations in real-time.</p>
+        <p class="tagline">"Together, we create a safer world."</p>
+        <div class="hero-buttons">
+            <a href="#map-section" class="btn explore-map">🔍 Explore Map</a>
+            <a href="report.html" class="btn report-incident">⚠️ Report Incident</a>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section id="map-section" class="map-container">
+        <div id="map"></div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section id="statistics" class="statistics">
+        <h2>Crime Statistics Over the Years</h2>
+        <p>Understanding trends helps us take better preventive measures.</p>
+        <canvas id="comparison-chart"></canvas>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        &copy; 2025 SafeHaven. All rights reserved.
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="js/home.js"></script>
+</body>
+</html>
