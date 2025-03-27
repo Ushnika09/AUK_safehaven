@@ -537,6 +537,36 @@ app.get("/api/auth/user-reports", (req, res) => {
 
 
 
+
+// In your server.js
+app.get("/api/reports/all", (req, res) => {
+    const query = `
+        SELECT 
+            id, incident_title, date_time, latitude, longitude, 
+            crime_type, description, severity, people_involved, 
+            injured, reported, anonymous, media_path
+        FROM 
+            incident_reports
+        ORDER BY 
+            date_time DESC
+    `;
+
+    db.execute(query, (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Database error" 
+            });
+        }
+        res.json({ success: true, reports: results });
+    });
+});
+
+
+
+
+
 // Start Server
 app.listen(port, () => {
     console.log(`🚀 Server running on http://localhost:${port}`);
