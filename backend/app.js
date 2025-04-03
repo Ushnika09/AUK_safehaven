@@ -14,8 +14,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const cors = require("cors");
 
-// Enable CORS for all routes
-app.use(cors());
+
+const corsOptions = {
+    origin: [
+        'http://localhost:5500', 
+        'http://127.0.0.1:5500', 
+        'http://localhost:3000',
+        'http://127.0.0.1:5501',
+        'http://localhost:5501' // Add this
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+app.use(cors(corsOptions));
+
+
+
+// // Enable CORS for all routes
+// app.use(cors());
 
 // File Upload Configuration
 const storage = multer.diskStorage({
@@ -565,6 +582,422 @@ app.get("/api/reports/all", (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Add these routes to your existing server.js
+
+// Get all reports (with optional filtering)
+app.get('/api/reports/all', async (req, res) => {
+    console.log("[API] Fetching all reports");
+    try {
+        const { status, type, date } = req.query;
+        
+        let query = "SELECT * FROM incident_reports";
+        const conditions = [];
+        const params = [];
+        
+        if (status && status !== 'all') {
+            conditions.push("status = ?");
+            params.push(status);
+        }
+        
+        if (type && type !== 'all') {
+            conditions.push("crime_type = ?");
+            params.push(type);
+        }
+        
+        if (date) {
+            conditions.push("DATE(date_time) = ?");
+            params.push(date);
+        }
+        
+        if (conditions.length > 0) {
+            query += " WHERE " + conditions.join(" AND ");
+        }
+        
+        query += " ORDER BY date_time DESC";
+        
+        const [reports] = await db.promise().execute(query, params);
+        res.json({ success: true, reports });
+    } catch (error) {
+        console.error("[API] Error fetching reports:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch reports" });
+    }
+});
+
+// Get report counts
+app.get('/api/reports/count', async (req, res) => {
+    console.log("[API] Fetching report counts");
+    try {
+        const { status } = req.query;
+        
+        let query = "SELECT COUNT(*) as count FROM incident_reports";
+        const params = [];
+        
+        if (status) {
+            query += " WHERE status = ?";
+            params.push(status);
+        }
+        
+        const [result] = await db.promise().execute(query, params);
+        res.json({ success: true, count: result[0].count });
+    } catch (error) {
+        console.error("[API] Error counting reports:", error);
+        res.status(500).json({ success: false, message: "Failed to count reports" });
+    }
+});
+
+// Get user counts
+app.get('/api/users/count', async (req, res) => {
+    console.log("[API] Fetching user counts");
+    try {
+        const { status } = req.query;
+        
+        let query = "SELECT COUNT(*) as count FROM users";
+        const params = [];
+        
+        if (status && status !== 'all') {
+            query += " WHERE status = ?";
+            params.push(status);
+        }
+        
+        const [result] = await db.promise().execute(query, params);
+        res.json({ success: true, count: result[0].count });
+    } catch (error) {
+        console.error("[API] Error counting users:", error);
+        res.status(500).json({ success: false, message: "Failed to count users" });
+    }
+});
+
+// Get report by ID
+app.get('/api/reports/:id', (req, res) => {
+    const { id } = req.params;
+    db.execute(
+        'SELECT * FROM incident_reports WHERE id = ?',
+        [id],
+        (err, results) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            if (results.length === 0) {
+                return res.status(404).json({ error: 'Report not found' });
+            }
+            res.json({ report: results[0] });
+        }
+    );
+});
+
+// Update Report Status API
+app.put("/api/reports/:id/status", (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Check if the user is admin (only admins can change status)
+        if (decoded.role !== 'admin') {
+            return res.status(403).json({ success: false, message: "Forbidden: Admin access required" });
+        }
+
+        // Validate the status
+        const validStatuses = ['pending', 'under_review', 'resolved', 'rejected'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid status",
+                validStatuses: validStatuses
+            });
+        }
+
+        // Update the report status in the database
+        const query = "UPDATE incident_reports SET status = ? WHERE id = ?";
+        db.execute(query, [status, id], (err, results) => {
+            if (err) {
+                console.error("Database Error:", err);
+                return res.status(500).json({ 
+                    success: false, 
+                    message: "Database error", 
+                    error: err.message 
+                });
+            }
+
+            if (results.affectedRows === 0) {
+                return res.status(404).json({ 
+                    success: false, 
+                    message: "Report not found" 
+                });
+            }
+
+            res.json({ 
+                success: true, 
+                message: `Report status updated to ${status}`,
+                reportId: id,
+                newStatus: status
+            });
+        });
+    } catch (error) {
+        console.error("JWT Error:", error);
+        res.status(401).json({ success: false, message: "Invalid token" });
+    }
+});
+
+// Database error handler/api/reports/
+db.on('error', (err) => {
+    console.error('Database error:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        // Reconnect if connection is lost
+        db.connect();
+    }
+});
+
+
+
+
+
+
+
+app.post('/api/auth/refresh', (req, res) => {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+        return res.status(400).json({ success: false, message: "Refresh token required" });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const newToken = jwt.sign(
+            { id: decoded.id, email: decoded.email, role: decoded.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+        
+        res.json({ success: true, token: newToken });
+    } catch (error) {
+        res.status(401).json({ success: false, message: "Invalid refresh token" });
+    }
+});
+
+
+
+
+// Single Report Endpoint
+app.get('/api/reports/:id', verifyAdmin, (req, res) => {
+    const { id } = req.params;
+    
+    db.execute(
+        `SELECT r.*, u.name as user_name, u.email as user_email
+         FROM incident_reports r
+         JOIN users u ON r.user_id = u.id
+         WHERE r.id = ?`,
+        [id],
+        (err, results) => {
+            if (err) {
+                return res.status(500).json({ 
+                    success: false, 
+                    message: "Database error",
+                    error: err.message 
+                });
+            }
+            
+            if (results.length === 0) {
+                return res.status(404).json({ 
+                    success: false, 
+                    message: "Report not found" 
+                });
+            }
+            
+            res.json({ 
+                success: true, 
+                report: results[0] 
+            });
+        }
+    );
+});
+
+
+
+
+// Delete Report Endpoint
+app.delete('/api/reports/:id', (req, res) => {
+    const { id } = req.params;
+    
+    // First delete associated media file if exists
+    db.execute(
+        'SELECT media_path FROM incident_reports WHERE id = ?',
+        [id],
+        (err, results) => {
+            if (err) {
+                return res.status(500).json({ 
+                    success: false,
+                    message: "Database error",
+                    error: err.message 
+                });
+            }
+            
+            if (results.length === 0) {
+                return res.status(404).json({ 
+                    success: false,
+                    message: "Report not found" 
+                });
+            }
+            
+            const report = results[0];
+            
+            // Delete the report
+            db.execute(
+                'DELETE FROM incident_reports WHERE id = ?',
+                [id],
+                (err, results) => {
+                    if (err) {
+                        return res.status(500).json({ 
+                            success: false,
+                            message: "Database error",
+                            error: err.message 
+                        });
+                    }
+                    
+                    // Delete media file if exists
+                    if (report.media_path) {
+                        const fs = require('fs');
+                        const path = require('path');
+                        const filePath = path.join(__dirname, report.media_path);
+                        
+                        fs.unlink(filePath, (err) => {
+                            if (err) {
+                                console.error("Error deleting media file:", err);
+                            }
+                        });
+                    }
+                    
+                    res.json({ 
+                        success: true,
+                        message: "Report deleted successfully" 
+                    });
+                }
+            );
+        }
+    );
+});
+
+// Get all reports with filtering and search
+app.get('/api/reports/all', async (req, res) => {
+    try {
+        const { status, crime_type, date, search } = req.query;
+        
+        let query = `
+            SELECT r.*, u.name as user_name 
+            FROM incident_reports r
+            JOIN users u ON r.user_id = u.id
+            WHERE 1=1
+        `;
+        
+        const params = [];
+        
+        if (status && status !== 'all') {
+            query += " AND r.status = ?";
+            params.push(status);
+        }
+        
+        if (crime_type && crime_type !== 'all') {
+            query += " AND r.crime_type = ?";
+            params.push(crime_type);
+        }
+        
+        if (date) {
+            query += " AND DATE(r.date_time) = ?";
+            params.push(date);
+        }
+        
+        if (search) {
+            query += " AND (r.incident_title LIKE ? OR r.description LIKE ? OR u.name LIKE ?)";
+            const searchTerm = `%${search}%`;
+            params.push(searchTerm, searchTerm, searchTerm);
+        }
+        
+        query += " ORDER BY r.date_time DESC";
+        
+        const [reports] = await db.promise().execute(query, params);
+        res.json({ success: true, reports });
+    } catch (error) {
+        console.error("[API] Error fetching reports:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch reports" });
+    }
+});
+
+// Token Refresh Endpoint
+app.post('/api/auth/refresh', (req, res) => {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+        return res.status(400).json({ success: false, message: "Refresh token required" });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const newToken = jwt.sign(
+            { id: decoded.id, email: decoded.email, role: decoded.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+        
+        res.json({ 
+            success: true, 
+            token: newToken,
+            refreshToken: refreshToken // Or generate new refresh token
+        });
+    } catch (error) {
+        res.status(401).json({ success: false, message: "Invalid refresh token" });
+    }
+});
+
+
+
+
+
+
+
+
+
+// Admin verification middleware
+function verifyAdmin(req, res, next) {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Check if user is admin
+        if (decoded.role !== 'admin') {
+            return res.status(403).json({ success: false, message: "Forbidden" });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({ success: false, message: "Invalid token" });
+    }
+}
 
 
 // Start Server

@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeHaven - Your Safety Matters</title>
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SafeHaven - Your Safety Matters</title>
+        <!-- Load Leaflet CSS first -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <!-- Load Chart.js CSS if needed -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="home.css">
+    </head>
 <body>
 
     <!-- Navigation Bar -->
-    <nav>
-        <div class="logo">SafeHaven</div>
-        <ul class="nav-links">
-            <li><a href="home.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="profile.html">My Profile</a></li>
-            <li><a href="report.html">Report</a></li>
-            <li><a href="#" id="logout-btn">Logout</a></li>
-            <li><button id="theme-toggle">🌙</button></li>
-        </ul>
-    </nav>
+    <!-- Modify the nav section in home.html -->
+<nav>
+    <div class="logo">SafeHaven</div>
+    <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="profile.html">My Profile</a></li>
+        <li><a href="report.html">Report</a></li>
+        <!-- This will be shown/hidden by JavaScript -->
+        <li id="admin-link" style="display: none;"><a href="admin.html">Admin</a></li>
+        <li><a href="#" id="logout-btn">Logout</a></li>
+        <li><button id="theme-toggle">🌙</button></li>
+    </ul>
+</nav>
 
     <!-- Hero Section -->
     <section class="hero">

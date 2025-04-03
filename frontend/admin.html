@@ -1,94 +1,256 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - SafeHaven</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="css/admin.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- <script>
+        if (!sessionStorage.getItem('adminAuth')) {
+        console.error("[ERROR] No admin session found, redirecting to login");
+        window.location.href = 'login.html';
+        return;
+    }
+    </script> -->
+
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav>
-        <div class="logo">SafeHaven</div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="profile.html">My Profile</a></li>
-            <li><a href="admin.html">Admin</a></li>
-            <li><a href="login.html">Logout</a></li>
-            <li><button id="theme-toggle">🌙</button></li>
-        </ul>
+        <div class="logo">SafeHaven Admin</div>
+        <div class="admin-controls">
+            <span class="admin-email" id="admin-email-display"></span>
+            <div class="theme-toggle">
+                <i class="fas fa-moon"></i>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <i class="fas fa-sun"></i>
+            </div>
+            <a href="#" id="logout-btn" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
     </nav>
 
-    <!-- Admin Dashboard -->
-    <section class="admin-dashboard">
-        <h2>Admin Dashboard</h2>
+    <main class="container">
+        <div class="admin-content">
+            <div class="dashboard-header">
+                <h2>Admin Dashboard</h2>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div>
+                            <h3 id="total-reports">0</h3>
+                            <p>Total Reports</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3 id="total-users">0</h3>
+                            <p>Registered Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h3 id="resolved-reports">0</h3>
+                            <p>Resolved Cases</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="admin-tabs">
+                <ul>
+                    <li class="active" data-tab="reports-tab">
+                        <i class="fas fa-flag"></i> Reports
+                    </li>
+                    <!-- <li data-tab="users-tab">
+                        <i class="fas fa-users-cog"></i> Users
+                    </li> -->
+                </ul>
+                <div class="tab-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="global-search" placeholder="Search across all records...">
+                    </div>
+                    <button id="export-data" class="btn-export">
+                        <i class="fas fa-file-export"></i> Export Data
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="tab-content active" id="reports-tab">
+                <div class="table-controls">
+                    <div class="filters">
+                        <select id="report-status-filter">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="under_review">Under Review</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <select id="report-type-filter">
+                            <option value="all">All Types</option>
+                            <option value="theft">Theft</option>
+                            <option value="assault">Assault</option>
+                            <option value="vandalism">Vandalism</option>
+                            <option value="harassment">Harassment</option>
+                        </select>
+                        <input type="date" id="report-date-filter">
+                    </div>
+                    <button id="bulk-action" class="btn-bulk">
+                        <i class="fas fa-tasks"></i> Bulk Actions
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table id="reports-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all-reports"></th>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Location</th>
+                                <th>Type</th>
+                                <th>Severity</th>
+                                
+                                <th>Date</th>
+                                <th>Anonymous</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="loading-row">
+                                <td colspan="10">
+                                    <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i> Loading reports...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination-controls">
+                        <button id="prev-page" disabled><i class="fas fa-chevron-left"></i></button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button id="next-page" disabled><i class="fas fa-chevron-right"></i></button>
+                        <select id="page-size">
+                            <option value="10">10 per page</option>
+                            <option value="25">25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+                <div class="table-controls1">
+                    <div class="filters">
+                        <select id="user-status-filter">
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="banned">Banned</option>
+                        </select>
+                        <input type="text" id="user-search" placeholder="Search users...">
+                    </div>
+                    <button id="add-user" class="btn-add">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                </div>
 
-        <!-- Report Management -->
-        <div class="report-management">
-            <h3>Report Management</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Location</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>51.505, -0.09</td>
-                        <td>Harassment reported here.</td>
-                        <td>Pending</td>
-                        <td>
-                            <button>Resolve</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                    <!-- Add more rows dynamically -->
-                </tbody>
-            </table>
+                <div class="table-container">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all-users"></th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Reports</th>
+                                <th>Status</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="loading-row">
+                                <td colspan="8">
+                                    <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i> Loading users...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+
+                </div>
+
+            </div> 
+            
+            <!-- Modals -->
+            <div id="report-detail-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Report Details</h3>
+                    <div class="modal-body" id="report-detail-content">
+                        <!-- Dynamic content loaded here -->
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-resolve">Mark as Resolved</button>
+                        <button class="btn-reject">Reject Report</button>
+                        <button class="btn-close">Close</button>
+                    </div>
+                </div>
+            </div>
+            
+            </div>
         </div>
+    </main>
 
-        <!-- User Management -->
-        <div class="user-management">
-            <h3>User Management</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>John Doe</td>
-                        <td>john@example.com</td>
-                        <td>User</td>
-                        <td>
-                            <button>Ban</button>
-                            <button>Promote</button>
-                        </td>
-                    </tr>
-                    <!-- Add more rows dynamically -->
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2023 SafeHaven. All rights reserved.</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>SafeHaven Admin</h4>
+                    <p>Comprehensive administration panel for managing safety reports and user accounts.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Audit Log</a></li>
+                        <li><a href="#">System Settings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Developers</a></li>
+                        <li><a href="#">Report an Issue</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SafeHaven. All rights reserved. | Version 2.3.1</p>
+                <div class="system-status">
+                    <span class="status-indicator active"></span>
+                    <span>System Operational</span>
+                </div>
+            </div>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/admin.js"></script>
+ 
 </body>
 </html>

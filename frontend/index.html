@@ -8,6 +8,58 @@
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.77/build/spline-viewer.js"></script>
+
+
+
+    <style>
+        /* Login Dropdown Styles */
+.login-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    padding: 10px 16px;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item i {
+    margin-right: 8px;
+}
+
+.login-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-toggle .fa-caret-down {
+    font-size: 12px;
+}
+    </style>
 </head>
 
 <body>
@@ -36,11 +88,22 @@
                     <span>Register</span>
                 </a>
             
-                <!-- Login Link -->
-                <a href="./login.html" class="login-btn">
-                    <i class="fas fa-user"></i>
-                    <span>Login</span>
-                </a>
+                <!-- Modified Login Dropdown -->
+                <div class="login-dropdown">
+                    <button class="login-btn dropdown-toggle">
+                        <i class="fas fa-user"></i>
+                        <span>Login</span>
+                        <i class="fas fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="./login.html?type=user" class="dropdown-item">
+                            <i class="fas fa-user"></i> User Login
+                        </a>
+                        <a href="./login.html?type=admin" class="dropdown-item">
+                            <i class="fas fa-lock"></i> Admin Login
+                        </a>
+                    </div>
+                </div>
             
                 <i class="fas fa-bars" id="menu-icon"></i>
             </div>
@@ -195,7 +258,7 @@
                     <span>Schools</span>
                 </div>
                 <div class="trust-badge">
-                    <i class="fas fa-shopping-mall"></i>
+                    <i class="fas fa-mall"></i>
                     <span>Malls</span>
                 </div>
             </div>

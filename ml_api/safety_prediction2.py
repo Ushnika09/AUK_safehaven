@@ -1,3 +1,26 @@
+# Add these at the top of your training script
+import joblib
+from sklearn.metrics import classification_report
+
+# After training, add evaluation:
+print("\nModel Evaluation:")
+print(classification_report(y_test, model.predict(X_test)))
+
+# Save important metadata along with the model
+model_package = {
+    'model': model,
+    'selected_features': selected_features.tolist(),
+    'category_mapping': category_mapping,
+    'crime_weights': crime_weights,
+    'input_order': ["latitude", "longitude", "category", "severity", 
+                   "injured", "reported", "time_incident"],
+    'model_version': '1.0',
+    'training_date': pd.Timestamp.now().strftime('%Y-%m-%d')
+}
+
+joblib.dump(model_package, "model_package.pkl")
+
+
 import numpy as np
 import pandas as pd
 import warnings
@@ -6,8 +29,6 @@ from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import train_test_split
 
 warnings.simplefilter("ignore", UserWarning)
-
-# Incident Title,Date & Time,Latitude,Longitude,Category of Incident,Severity,Number of People Involved,Was anyone injured?,Was it reported to authorities?
 
 # Load dataset
 file_path = "C:/Users/karus/OneDrive/Desktop/AUK SAFEHAVEN/project/AUKSafehaven model/AUKSafehaven/women_safety_dataset.csv"
@@ -184,9 +205,13 @@ joblib.dump(model, "model.pkl")
 print("✅ Model saved successfully as model.pkl")
 
 
-import joblib
+# Save the complete model package (ADD THIS TO YOUR TRAINING CODE)
+joblib.dump({
+    'model': model,
+    'selected_features': selected_features.tolist(),  # Save the feature order
+    'category_mapping': category_mapping,
+    'crime_weights': crime_weights,
+    'time_categories': ["Daytime", "Night", "Midnight"]
+}, "model_package.pkl")
 
-# Save the trained model and selected features
-joblib.dump((model, selected_features), "model_and_features.pkl")
-print("✅ Model and selected features saved successfully.")
-
+print("✅ Model package saved with all components")
