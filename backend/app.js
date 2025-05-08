@@ -15,18 +15,13 @@ app.use(express.urlencoded({ extended: true }));
 const cors = require("cors");
 
 
+// Accept all origins during development
 const corsOptions = {
-    origin: [
-        'http://localhost:5500', 
-        'http://127.0.0.1:5500', 
-        'http://localhost:3000',
-        'http://127.0.0.1:5501',
-        'http://localhost:5501' // Add this
-    ],
+    origin: true, // or use function for dynamic control
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
-};
+  };
 app.use(cors(corsOptions));
 
 
@@ -248,12 +243,14 @@ app.post("/api/auth/login", (req, res) => {
         }
 
         // Generate JWT token
+        // In your login endpoint, ensure role is included:
         const token = jwt.sign(
-            { id: user.id, email: user.email, role: user.role }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: "1h" }
+            { id: user.id, email: user.email, role: user.role || 'user' }, // Default to 'user' if role not set
+            process.env.JWT_SECRET,
+            { expiresIn: "8h" }
         );
 
+        
         // Send response with token and user details
         res.json({
             success: true,
@@ -554,88 +551,6 @@ app.get("/api/auth/user-reports", (req, res) => {
 
 
 
-
-// In your server.js
-app.get("/api/reports/all", (req, res) => {
-    const query = `
-        SELECT 
-            id, incident_title, date_time, latitude, longitude, 
-            crime_type, description, severity, people_involved, 
-            injured, reported, anonymous, media_path
-        FROM 
-            incident_reports
-        ORDER BY 
-            date_time DESC
-    `;
-
-    db.execute(query, (err, results) => {
-        if (err) {
-            console.error("Database error:", err);
-            return res.status(500).json({ 
-                success: false, 
-                message: "Database error" 
-            });
-        }
-        res.json({ success: true, reports: results });
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Add these routes to your existing server.js
-
-// Get all reports (with optional filtering)
-app.get('/api/reports/all', async (req, res) => {
-    console.log("[API] Fetching all reports");
-    try {
-        const { status, type, date } = req.query;
-        
-        let query = "SELECT * FROM incident_reports";
-        const conditions = [];
-        const params = [];
-        
-        if (status && status !== 'all') {
-            conditions.push("status = ?");
-            params.push(status);
-        }
-        
-        if (type && type !== 'all') {
-            conditions.push("crime_type = ?");
-            params.push(type);
-        }
-        
-        if (date) {
-            conditions.push("DATE(date_time) = ?");
-            params.push(date);
-        }
-        
-        if (conditions.length > 0) {
-            query += " WHERE " + conditions.join(" AND ");
-        }
-        
-        query += " ORDER BY date_time DESC";
-        
-        const [reports] = await db.promise().execute(query, params);
-        res.json({ success: true, reports });
-    } catch (error) {
-        console.error("[API] Error fetching reports:", error);
-        res.status(500).json({ success: false, message: "Failed to fetch reports" });
-    }
-});
-
 // Get report counts
 app.get('/api/reports/count', async (req, res) => {
     console.log("[API] Fetching report counts");
@@ -898,12 +813,17 @@ app.delete('/api/reports/:id', (req, res) => {
 });
 
 // Get all reports with filtering and search
-app.get('/api/reports/all', async (req, res) => {
+// Get all reports with filtering and search
+app.get('/api/reports/all', verifyAdmin, async (req, res) => {
     try {
         const { status, crime_type, date, search } = req.query;
         
         let query = `
-            SELECT r.*, u.name as user_name 
+            SELECT 
+                r.id, r.incident_title, r.date_time, r.latitude, r.longitude, 
+                r.crime_type, r.description, r.severity, r.people_involved, 
+                r.injured, r.reported, r.anonymous, r.media_path, r.status, 
+                u.name as user_name
             FROM incident_reports r
             JOIN users u ON r.user_id = u.id
             WHERE 1=1
@@ -934,7 +854,10 @@ app.get('/api/reports/all', async (req, res) => {
         
         query += " ORDER BY r.date_time DESC";
         
+        console.log("[API] Executing query:", query, "with params:", params);
         const [reports] = await db.promise().execute(query, params);
+        console.log("[API] Reports fetched:", reports.map(r => ({ id: r.id, status: r.status })));
+        
         res.json({ success: true, reports });
     } catch (error) {
         console.error("[API] Error fetching reports:", error);
@@ -977,6 +900,7 @@ app.post('/api/auth/refresh', (req, res) => {
 
 
 // Admin verification middleware
+// Admin verification middleware
 function verifyAdmin(req, res, next) {
     const token = req.headers.authorization?.split(' ')[1];
     
@@ -989,16 +913,141 @@ function verifyAdmin(req, res, next) {
         
         // Check if user is admin
         if (decoded.role !== 'admin') {
-            return res.status(403).json({ success: false, message: "Forbidden" });
+            return res.status(403).json({ success: false, message: "Forbidden: Admin access required" });
         }
         
         req.user = decoded;
         next();
     } catch (error) {
-        res.status(401).json({ success: false, message: "Invalid token" });
+        // Handle different JWT errors specifically
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({ 
+                success: false, 
+                message: "Token expired",
+                error: error.message 
+            });
+        }
+        
+        if (error instanceof jwt.JsonWebTokenError) {
+            return res.status(401).json({ 
+                success: false, 
+                message: "Invalid token",
+                error: error.message 
+            });
+        }
+        
+        res.status(401).json({ success: false, message: "Authentication failed" });
     }
 }
 
+
+
+app.put("/api/reports/:id/status", verifyAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        // Validate status
+        const validStatuses = ['pending', 'under_review', 'resolved', 'rejected'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid status",
+                validStatuses 
+            });
+        }
+
+        // Update in database
+        const [result] = await db.promise().execute(
+            'UPDATE incident_reports SET status = ? WHERE id = ?',
+            [status, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Report not found" 
+            });
+        }
+
+        res.json({ 
+            success: true, 
+            message: `Report status updated to ${status}`,
+            reportId: id,
+            newStatus: status
+        });
+
+    } catch (error) {
+        console.error("Report status update error:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to update report status",
+            error: error.message 
+        });
+    }
+});
+
+const { Parser } = require('json2csv');
+
+// Export Reports as CSV
+app.get('/api/reports/export', verifyAdmin, async (req, res) => {
+    try {
+        console.log("[API] Exporting reports as CSV");
+        
+        // Fetch all reports with user names
+        const query = `
+            SELECT 
+                r.id, r.incident_title, r.date_time, r.latitude, r.longitude, 
+                r.crime_type, r.description, r.severity, r.people_involved, 
+                r.injured, r.reported, r.anonymous, r.media_path, r.status, 
+                u.name as user_name
+            FROM incident_reports r
+            JOIN users u ON r.user_id = u.id
+            ORDER BY r.date_time DESC
+        `;
+        
+        const [reports] = await db.promise().execute(query);
+        console.log("[API] Fetched reports:", reports.length);
+        
+        if (reports.length === 0) {
+            console.log("[API] No reports found for export");
+            return res.status(404).json({ success: false, message: "No reports found" });
+        }
+        
+        // Define CSV fields
+        const fields = [
+            { label: 'ID', value: 'id' },
+            { label: 'Title', value: 'incident_title' },
+            { label: 'Date', value: 'date_time' },
+            { label: 'Latitude', value: 'latitude' },
+            { label: 'Longitude', value: 'longitude' },
+            { label: 'Crime Type', value: 'crime_type' },
+            { label: 'Description', value: 'description' },
+            { label: 'Severity', value: 'severity' },
+            { label: 'People Involved', value: 'people_involved' },
+            { label: 'Injured', value: 'injured' },
+            { label: 'Reported', value: 'reported' },
+            { label: 'Anonymous', value: 'anonymous' },
+            { label: 'Media Path', value: 'media_path' },
+            { label: 'Status', value: 'status' },
+            { label: 'User Name', value: 'user_name' }
+        ];
+        
+        // Convert to CSV
+        const json2csvParser = new Parser({ fields });
+        const csv = json2csvParser.parse(reports);
+        
+        // Set response headers for CSV download
+        res.header('Content-Type', 'text/csv');
+        res.header('Content-Disposition', 'attachment; filename="reports_export.csv"');
+        
+        // Send CSV data
+        res.send(csv);
+    } catch (error) {
+        console.error("[API] Error exporting reports:", error);
+        res.status(500).json({ success: false, message: "Failed to export reports", error: error.message });
+    }
+});
 
 // Start Server
 app.listen(port, () => {

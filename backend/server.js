@@ -4,6 +4,20 @@ const bcrypt = require("bcryptjs");
 const mysql = require("mysql2");
 const twilio = require("twilio");
 
+const cors = require('cors');
+
+
+// Allow all origins (for development purposes)
+app.use(cors());
+
+// OR restrict to specific origin
+// app.use(cors({ origin: 'http://192.168.237.126:5501' }));
+
+app.use(express.json());
+
+// your routes...
+
+
 const app = express();
 const port = 3000;
 
